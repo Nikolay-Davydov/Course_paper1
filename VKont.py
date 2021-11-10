@@ -20,22 +20,27 @@ class VkUser:
             'rev': '0',
             'extended': '1'
         }
-        res = requests.get(url, params={**self.params, **get_foto_params})
-        foto_dict = res.json()
-        items = foto_dict['response']['items']
-        print("Получили словарь фото с вк")
-        for foto_vk in items:
-            name = str(foto_vk['likes']['count']) + '.jpg'
-            if name in vk_dict.keys():
-                name = str(foto_vk['date']) + '_' + name
-            size_dict = {}
-            for foto_size in foto_vk['sizes']:
-                size_dict[foto_size['type']] = foto_size['url']
-            for symbol in size_best:
-                if symbol in size_dict.keys():
-                    size = symbol
-                    url = size_dict[symbol]
-                    vk_dict[name] = {'size': size, 'url': url}
-                break
-        print("Создали словарь фото для яндекса")
-        return vk_dict
+        try:
+            z = self.params.copy()
+            z.update(get_foto_params)
+            res = requests.get(url, params={** self.params, ** get_foto_params})
+            foto_dict = res.json()
+            items = foto_dict['response']['items']
+            print("Получили словарь фото с вк")
+            for foto_vk in items:
+                name = str(foto_vk['likes']['count']) + '.jpg'
+                if name in vk_dict.keys():
+                    name = str(foto_vk['date']) + '_' + name
+                size_dict = {}
+                for foto_size in foto_vk['sizes']:
+                    size_dict[foto_size['type']] = foto_size['url']
+                for symbol in size_best:
+                    if symbol in size_dict.keys():
+                        size = symbol
+                        url = size_dict[symbol]
+                        vk_dict[name] = {'size': size, 'url': url}
+                    break
+            print("Создали словарь фото для яндекса")
+            return vk_dict
+        except (TypeError, AttributeError, KeyError):
+            print("При попытке получения фотографий с ресурса VK произошла ошибка. Проверьте вводные данные: токен, id VK")

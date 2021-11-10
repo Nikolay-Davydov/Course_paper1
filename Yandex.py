@@ -29,7 +29,10 @@ class YandexDisk:
     def upload_url_to_disk(self, file_params):
         upload_url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
         headers = self.get_headers()
-        response = requests.post(url=upload_url, params=file_params, headers=headers)
-        response.raise_for_status()
-        if response.status_code == 202:
-            print("Success")
+        try:
+            response = requests.post(url=upload_url, params=file_params, headers=headers)
+            response.raise_for_status()
+            if response.status_code == 202:
+                print("Success")
+        except:
+            print("При попытке загрузки фотографии на Yandex диск произошла ошибка, проверьте токен Yandex.")
