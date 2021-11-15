@@ -13,16 +13,19 @@ def file_json_dict(rezult_dict):
 
 ya_token = input('1. Введите токен для Яндекс диска: ')
 vk_token = input('2. Введите токен Вконтакте: ')
+name_folder = 'course_work'
 try:
     vk_id = int(input('3. Введите id аккаунта Вкотакте: '))
     ya = Yandex.YandexDisk(token=ya_token)
     vk = VKont.VkUser(token=vk_token, version=VK_VERSION)
     rez_dict = vk.get_foto_user(vk_id, 'profile', 5)
     json_dict = []
+    if (ya.is_not_exist_folder(name_folder)):
+        ya.create_folder(name_folder)
     for key, value in rez_dict.items():
         print("загружаем фото на яндекс диск")
         params = {
-            'path': 'work/'+key,
+            'path': name_folder + '/' + key,
             'url': value['url']
         }
         print("добавляем информацию о файле в список для файла-результата")
