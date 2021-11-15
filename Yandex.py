@@ -36,3 +36,28 @@ class YandexDisk:
                 print("Success")
         except:
             print("При попытке загрузки фотографии на Yandex диск произошла ошибка, проверьте токен Yandex.")
+
+    def create_folder(self, folder_name):
+        upload_url = "https://cloud-api.yandex.net/v1/disk/resources?path="+ folder_name
+        headers = self.get_headers()
+        try:
+            response = requests.put(url=upload_url, headers=headers)
+            response.raise_for_status()
+            if response.status_code == 201:
+                print("Создание папки на Yandex диске")
+        except:
+            print("При попытке создания папки на Yandex диск произошла ошибка, проверьте токен Yandex.")
+
+    def is_not_exist_folder(self, folder_name):
+        print("Проверка возможности создания папки")
+        try:
+            upload_url = "https://cloud-api.yandex.net/v1/disk/resources?path=" + folder_name
+            headers = self.get_headers()
+            response = requests.get(url=upload_url, headers=headers)
+            check_result = response.json()
+            if ('error' in check_result and check_result['error'] == 'DiskNotFoundError'):
+                return True
+            else:
+                return False
+        except:
+            print("При попытке создания папки на Yandex диск произошла ошибка, проверьте токен Yandex.")
